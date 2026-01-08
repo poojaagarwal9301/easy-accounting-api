@@ -28,7 +28,7 @@ public class UserExpenseController {
 	}
 	
 	@GetMapping("/exp/{expId}")
-	public ResponseEntity<ExpenseDetailsDTO> getUserExpenseById(@PathVariable Integer expId) {
+	public ResponseEntity<ExpenseDetailsDTO> getUserExpenseByExpenseId(@PathVariable Integer expId) {
 		Optional<ExpenseDetailsDTO> res = userExpenseService.getUserExpenseById(expId);
 	    return res.map(response -> ResponseEntity.ok().body(response))
 	    		.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
