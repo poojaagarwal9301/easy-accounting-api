@@ -23,6 +23,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserExpenseService {
+
+	private final KafkaMessageProducer producer;
+
+	public UserExpenseService(KafkaMessageProducer producer) {
+		this.producer = producer;
+	}
 	
 	@Autowired
 	private ExpenseDetailsRepository expenseDetailsRepository;
@@ -50,6 +56,7 @@ public class UserExpenseService {
 	
 	public Optional<ExpenseDetailsDTO> getUserExpenseById(Integer expId) {
 		ExpenseDetailsDTO expDetail = expenseDetailsRepository.getExpenseById(expId);
+
 		return Optional.of(expDetail);
 	}
 
@@ -74,6 +81,7 @@ public class UserExpenseService {
 					response.getPartiallyPaid(),
 					response.getPartialAmtLeft(),
 					response.getPartialPaidAmt());
+			producer.sendMessage("Expense Created with expense id : " + response.getExpId() + " , expense subject :  "+response.getExpName());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
